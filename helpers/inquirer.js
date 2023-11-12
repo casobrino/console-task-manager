@@ -19,10 +19,9 @@ const questions = [
 ]
 
 export const inquiererMenu = async () => {
-  console.clear();
-  console.log("=======================".green);
-  console.log('Selecciona una opcion'.green);
-  console.log("=======================\n".green);
+  console.log("=======================".green)
+  console.log('Selecciona una opcion'.green)
+  console.log("=======================\n".green)
   const { option } = await inquirer.prompt(questions)
   return option
 }
@@ -32,8 +31,11 @@ export const pause = async () => {
 export const leerIntput = async (message) => {
   const question = [
     {
-      type: 'input', name: 'desc', message, validate (value) {
-        value.length < 1 ? 'Por favor ingrese un valor' : true
+      type: 'input',
+      name: 'desc',
+      message,
+      validate (value) {
+        return value.length === 0 ? 'Por favor ingrese un valor' : true
       }
     }
   ]

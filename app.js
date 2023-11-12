@@ -1,16 +1,30 @@
-import colors from 'colors'
-//import { mostrarMenu, pausa } from './helpers/mensajes.js';
-import { inquiererMenu, pause, leerIntput } from './inquirer.js'
+import { inquiererMenu, pause, leerIntput } from './helpers/inquirer.js'
+import { guardarDB, leerDb } from './helpers/guardarArchivo.js'
 import Tareas from './models/tareas.js'
 
+const tareas = new Tareas()
+
 const main = async () => {
-  let opt = ''
-  const tareas = new Tareas();
+  let opt = null
+  const tareasDB = leerDb()
+  if (tareasDB) tareas.cargarTareasfromArr(tareasDB)
   do {
-    opt = await inquiererMenu();
-    opt == 1 && leerIntput('Esta es mi desc')
-    opt == 2 && console.log(tareas._listado)
-    await pause();
+    console.clear()
+    opt = await inquiererMenu()
+    switch (opt) {
+      case 1:
+        const desc = await leerIntput('Description')
+        tareas.crearTarea(desc)
+        break
+      case 2:
+        tareas.listadoCompleto()
+        break
+      case 3:
+        console.log(tareas.listadoArr)
+        break
+    }
+    guardarDB(tareas.listadoArr)
+    await pause()
   } while (opt != 0)
 }
 
