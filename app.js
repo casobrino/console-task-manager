@@ -1,4 +1,11 @@
-import { inquiererMenu, pause, leerIntput } from './helpers/inquirer.js'
+import {
+  inquiererMenu,
+  pause,
+  leerIntput,
+  eliminarTarea,
+  confirmarOption,
+  mostrarListadoChecklist
+} from './helpers/inquirer.js'
 import { guardarDB, leerDb } from './helpers/guardarArchivo.js'
 import Tareas from './models/tareas.js'
 
@@ -17,10 +24,26 @@ const main = async () => {
         tareas.crearTarea(desc)
         break
       case 2:
-        tareas.listadoCompleto()
+        tareas.listadoTareasStatus()
         break
       case 3:
-        console.log(tareas.listadoArr)
+        tareas.listarPendientesCompletadas(true)
+        break
+      case 4:
+        tareas.listarPendientesCompletadas(false)
+        break
+      case 5:
+        const ids = await mostrarListadoChecklist(tareas.listadoArr)
+        tareas.cambiarStatusTareas(ids)
+        break
+      case 6:
+        const id = await eliminarTarea(tareas.listadoArr)
+        if (id === 0) break
+        const confirm = await confirmarOption('Estas seguro que deseas borrarlo?')
+        if (confirm) {
+          tareas.borrarTarea(id)
+          console.log('Tarea borrada correctamente')
+        }
         break
     }
     guardarDB(tareas.listadoArr)
